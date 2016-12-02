@@ -138,6 +138,19 @@ def main(args=None):
     else:
         outfile = get_binary_stdio('stdout')
 
+    if options.dictfile:
+        if not os.path.isfile(options.dictfile):
+            parser.error('file "%s" not found' % options.dictfile)
+        with open(options.dictfile, "rb") as dictfile:
+            custom_dictionary = dictfile.read()
+    else:
+        custom_dictionary = ''
+
+    if options.comment:
+        archive_comment = options.comment
+    else:
+        archive_comment = ''
+
     try:
         if options.decompress:
             data = brotli.decompress(data)
