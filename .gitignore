@@ -18,3 +18,10 @@ __pycache__/
 *.txt.uncompressed
 *.br
 *.unbr
+*.bro
+*.unbro
+tools/bro
+build/
+dist/
+cmake/
+commits.txt
