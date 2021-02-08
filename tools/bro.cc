@@ -73,12 +73,14 @@ static void ParseArgv(int argc, char **argv,
                       int *decompress,
                       int *repeat,
                       int *verbose,
-                      int *lgwin) {
+                      int *lgwin,
+                      char **comment) {
   *force = 0;
   *input_path = 0;
   *output_path = 0;
   *repeat = 1;
   *verbose = 0;
+  *comment = 0;
   *lgwin = 22;
   {
     size_t argv0_len = strlen(argv[0]);
@@ -125,6 +127,13 @@ static void ParseArgv(int argc, char **argv,
         *output_path = argv[k + 1];
         ++k;
         continue;
+      } else if (!strcmp("--comment", argv[k])) {
+          if (*comment != 0) {
+              goto error;
+          }
+          *comment = argv[k + 1];
+          ++k;
+          continue;
       } else if (!strcmp("--quality", argv[k]) ||
                  !strcmp("-q", argv[k])) {
         if (!ParseQuality(argv[k + 1], quality)) {
@@ -158,6 +167,7 @@ error:
   fprintf(stderr,
           "Usage: %s [--force] [--quality n] [--decompress]"
           " [--input filename] [--output filename] [--repeat iters]"
+          " [--comment commment]"
           " [--verbose] [--window n]\n",
           argv[0]);
   exit(1);
@@ -275,8 +285,9 @@ int main(int argc, char** argv) {
   int repeat = 1;
   int verbose = 0;
   int lgwin = 0;
+  char *comment = 0;
   ParseArgv(argc, argv, &input_path, &output_path, &force,
-            &quality, &decompress, &repeat, &verbose, &lgwin);
+            &quality, &decompress, &repeat, &verbose, &lgwin, &comment);
   const clock_t clock_start = clock();
   for (int i = 0; i < repeat; ++i) {
     FILE* fin = OpenInputFile(input_path);
@@ -287,6 +298,7 @@ int main(int argc, char** argv) {
       brotli::BrotliParams params;
       params.lgwin = lgwin;
       params.quality = quality;
+      params.comment = comment;
       try {
         brotli::BrotliFileIn in(fin, 1 << 16);
         brotli::BrotliFileOut out(fout);
