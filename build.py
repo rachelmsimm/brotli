@@ -43,3 +43,6 @@ commits = open('dist/commits.txt', 'w')
 subprocess.run('git config --get remote.origin.url', shell=True, stdout=commits)
 subprocess.run('git rev-parse HEAD', shell=True, stdout=commits)
 commits.close()
+
+# Copy license file
+shutil.copy2('LICENSE', 'dist/LICENSE.txt')
