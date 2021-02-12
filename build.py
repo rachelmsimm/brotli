@@ -53,9 +53,9 @@ if WINDOWS:
         os.mkdir('dist/win_x86_64')
     shutil.copy2('cmake/brotli.exe', 'dist/win_x86_64/brotli.exe')
 elif sys.platform == 'darwin':
-    if not os.path.exists('dist/macos_x86_64'):
-        os.mkdir('dist/macos_x86_64')
-    shutil.copy2('cmake/brotli', 'dist/macos_x86_64/brotli')
+    if not os.path.exists('dist/macos'):
+        os.mkdir('dist/macos')
+    shutil.copy2('cmake/brotli', 'dist/macos/brotli')
 else:
     if not os.path.exists('dist/linux_x86_64'):
         os.mkdir('dist/linux_x86_64')
