@@ -48,7 +48,7 @@ os.chdir('..')
 if not os.path.exists('dist'):
     os.mkdir('dist')
 
-if sys.platform == 'win32':
+if WINDOWS:
     if not os.path.exists('dist/win_x86_64'):
         os.mkdir('dist/win_x86_64')
     shutil.copy2('cmake/brotli.exe', 'dist/win_x86_64/brotli.exe')
