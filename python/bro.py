@@ -114,6 +114,13 @@ def main(args=None):
         help='Base 2 logarithm of the maximum input block size. '
         'Range is 16 to 24. If set to 0, the value will be set based '
         'on the quality. Defaults to 0.')
+    params.add_argument(
+        '--comment',
+        type=str,
+        dest='comment',
+        help='Archive comment.',
+        default = None
+    )
     # set default values using global DEFAULT_PARAMS dictionary
     parser.set_defaults(**DEFAULT_PARAMS)
 
@@ -138,14 +145,6 @@ def main(args=None):
     else:
         outfile = get_binary_stdio('stdout')
 
-    if options.dictfile:
-        if not os.path.isfile(options.dictfile):
-            parser.error('file "%s" not found' % options.dictfile)
-        with open(options.dictfile, "rb") as dictfile:
-            custom_dictionary = dictfile.read()
-    else:
-        custom_dictionary = ''
-
     if options.comment:
         archive_comment = options.comment
     else:
@@ -160,7 +159,8 @@ def main(args=None):
                 mode=options.mode,
                 quality=options.quality,
                 lgwin=options.lgwin,
-                lgblock=options.lgblock)
+                lgblock=options.lgblock,
+                comment=options.archive_comment)
     except brotli.error as e:
         parser.exit(1,
                     'bro: error: %s: %s' % (e, options.infile or 'sys.stdin'))

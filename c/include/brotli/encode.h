@@ -218,7 +218,11 @@ typedef enum BrotliEncoderParameter {
    * maximal window size have the same effect. Values greater than 2**30 are not
    * allowed.
    */
-  BROTLI_PARAM_STREAM_OFFSET = 9
+  BROTLI_PARAM_STREAM_OFFSET = 9,
+  /**
+   * TODO
+  */
+  BROTLI_PARAM_COMMENT = 10
 } BrotliEncoderParameter;
 
 /**

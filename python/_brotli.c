@@ -344,6 +344,8 @@ PyDoc_STRVAR(brotli_Compressor_doc,
 "  lgblock (int, optional): Base 2 logarithm of the maximum input block size.\n"
 "    Range is 16 to 24. If set to 0, the value will be set based on the\n"
 "    quality. Defaults to 0.\n"
+"  comment (string, optional): A comment that will be added as the leading\n"
+"     metadata metablock.\n"
 "\n"
 "Raises:\n"
 "  brotli.error: If arguments are invalid.\n");
@@ -378,16 +380,18 @@ static int brotli_Compressor_init(brotli_Compressor *self, PyObject *args, PyObj
   int quality = -1;
   int lgwin = -1;
   int lgblock = -1;
+  char *comment = "";
   int ok;
 
-  static const char *kwlist[] = {"mode", "quality", "lgwin", "lgblock", NULL};
+  static const char *kwlist[] = {"mode", "quality", "lgwin", "lgblock", "comment", NULL};
 
   ok = PyArg_ParseTupleAndKeywords(args, keywds, "|O&O&O&O&:Compressor",
                     (char **) kwlist,
                     &mode_convertor, &mode,
                     &quality_convertor, &quality,
                     &lgwin_convertor, &lgwin,
-                    &lgblock_convertor, &lgblock);
+                    &lgblock_convertor, &lgblock,
+                    &comment);
   if (!ok)
     return -1;
   if (!self->enc)
@@ -401,6 +405,7 @@ static int brotli_Compressor_init(brotli_Compressor *self, PyObject *args, PyObj
     BrotliEncoderSetParameter(self->enc, BROTLI_PARAM_LGWIN, (uint32_t)lgwin);
   if (lgblock != -1)
     BrotliEncoderSetParameter(self->enc, BROTLI_PARAM_LGBLOCK, (uint32_t)lgblock);
+  BrotliEncoderSetParameter(self->enc, BROTLI_PARAM_COMMENT, comment);
 
   return 0;
 }
