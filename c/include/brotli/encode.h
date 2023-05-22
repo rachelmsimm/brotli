@@ -220,8 +220,11 @@ typedef enum BrotliEncoderParameter {
    */
   BROTLI_PARAM_STREAM_OFFSET = 9,
   /**
-   * TODO
-  */
+   * Embedded comment stream to allow data to be identified as Brotli or
+   * uncompressed data.
+   * 
+   * Used for Unity's Decompression Fallback option.
+   */
   BROTLI_PARAM_COMMENT = 10
 } BrotliEncoderParameter;
 

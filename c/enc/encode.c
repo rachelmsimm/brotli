@@ -1135,7 +1135,12 @@ static BROTLI_BOOL EncodeData(
   {
     const uint32_t metablock_size =
         (uint32_t)(s->input_pos_ - s->last_flush_pos_);
-    uint8_t* storage = GetBrotliStorage(s, 2 * metablock_size + 503);
+
+    // add extra storage to accommodate the comment parameter
+    size_t embedded_comment_size = s->params.comment ? srtlen(s->params.comment) : 0;
+    size_t encoded_embedded_comment_size = embedded_comment_size ? 6 + embedded_comment_size : 0;
+    const size_t max_brotli_storage_needed = encoded_embedded_comment_size + 2 * metablock_size + 503;
+    uint8_t* storage = GetBrotliStorage(s, max_brotli_storage_needed);
     size_t storage_ix = s->last_bytes_bits_;
     if (BROTLI_IS_OOM(m)) return BROTLI_FALSE;
     storage[0] = (uint8_t)s->last_bytes_;
