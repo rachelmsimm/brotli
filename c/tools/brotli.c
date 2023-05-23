@@ -115,6 +115,7 @@ typedef struct {
   const char* output_path;
   const char* dictionary_path;
   const char* suffix;
+  const char* comment;
   int not_input_indices[MAX_OPTIONS];
   size_t longest_path_len;
   size_t input_count;
@@ -207,6 +208,7 @@ static Command ParseParams(Context* params) {
   BROTLI_BOOL keep_set = BROTLI_FALSE;
   BROTLI_BOOL lgwin_set = BROTLI_FALSE;
   BROTLI_BOOL suffix_set = BROTLI_FALSE;
+  BROTLI_BOOL comment_set = BROTLI_FALSE;
   BROTLI_BOOL after_dash_dash = BROTLI_FALSE;
   Command command = ParseAlias(argv[0]);
 
@@ -389,6 +391,13 @@ static Command ParseParams(Context* params) {
           }
           suffix_set = BROTLI_TRUE;
           params->suffix = argv[i];
+        } else if (c == 'C') {
+          if (comment_set) {
+            fprintf(stderr, "comment already set\n");
+            return COMMAND_INVALID;
+          }
+          comment_set = BROTLI_TRUE;
+          params->comment = argv[i];
         }
       }
     } else {  /* Double-dash. */
@@ -535,6 +544,13 @@ static Command ParseParams(Context* params) {
           }
           suffix_set = BROTLI_TRUE;
           params->suffix = value;
+        } else if (strncmp("comment", arg, key_len) == 0) {
+          if (comment_set) {
+            fprintf(stderr, "comment already set\n");
+            return COMMAND_INVALID;
+          }
+          comment_set = BROTLI_TRUE;  
+          params->comment = value;  
         } else {
           fprintf(stderr, "invalid parameter: [%s]\n", arg);
           return COMMAND_INVALID;
@@ -608,6 +624,9 @@ static void PrintHelp(const char* name, BROTLI_BOOL error) {
   fprintf(media,
 "  -S SUF, --suffix=SUF        output file suffix (default:'%s')\n",
           DEFAULT_SUFFIX);
+  fprintf(media,               // TODO example usage of comment
+"  -C COMM, --comment=COMM     comment for identifying whether data is\n"
+"                              brotli compressed or uncompressed\n");
   fprintf(media,
 "  -V, --version               display version and exit\n"
 "  -Z, --best                  use best compression level (11) (default)\n"
@@ -1167,6 +1186,8 @@ int main(int argc, char** argv) {
   context.output_path = NULL;
   context.dictionary_path = NULL;
   context.suffix = DEFAULT_SUFFIX;
+  context.comment = NULL;
+
   for (i = 0; i < MAX_OPTIONS; ++i) context.not_input_indices[i] = 0;
   context.longest_path_len = 1;
   context.input_count = 0;
