@@ -19,6 +19,8 @@ else()
   message(STATUS "Build type is '${CMAKE_BUILD_TYPE}'")
 endif()
 
+set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "OSX Architectures" FORCE)
+
 include(CheckCSourceCompiles)
 check_c_source_compiles(
   "#if defined(__EMSCRIPTEN__)
