@@ -16,6 +16,8 @@ testdata/plrabn12.txt
 $BRO
 """
 
+echo "this is a dummy line added for a test"
+
 for file in $INPUTS; do
   for quality in 1 6 9 11; do
     echo "Roundtrip testing $file at quality $quality"
