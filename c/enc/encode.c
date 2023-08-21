@@ -667,6 +667,7 @@ static void BrotliEncoderInitParams(BrotliEncoderParams* params) {
   params->quality = BROTLI_DEFAULT_QUALITY;
   params->lgwin = BROTLI_DEFAULT_WINDOW;
   params->lgblock = 0;
+  params->comment = NULL;
   params->stream_offset = 0;
   params->size_hint = 0;
   params->disable_literal_context_modeling = BROTLI_FALSE;
